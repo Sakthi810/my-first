@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#6366f1">
+    <title>FinTrack - Premium Dashboard</title>
+    <link rel="stylesheet" href="style-optimized.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Login Section -->
+        <section id="loginSection" class="login-container">
+            <div class="login-card glass-card">
+                <div class="login-header">
+                    <i class="fas fa-wallet logo-icon"></i>
+                    <h1>FinTrack</h1>
+                    <p>Your Personal Finance Companion</p>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="userNameInput">Username</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="userNameInput" placeholder="Enter your name" required
+                                autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordInput">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="passwordInput" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+                    <div class="auth-buttons">
+                        <button type="submit" class="btn-primary" id="loginBtn">
+                            <span class="btn-text">Login</span>
+                            <span class="btn-spinner hidden">
+                                <i class="fas fa-circle-notch fa-spin"></i> Logging in...
+                            </span>
+                        </button>
+                        <button type="button" class="btn-secondary" id="registerBtn">
+                            <span class="btn-text">Register</span>
+                            <span class="btn-spinner hidden">
+                                <i class="fas fa-circle-notch fa-spin"></i> Registering...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Dashboard Section (Hidden by default) -->
+        <div id="dashboardSection" class="dashboard-wrapper hidden">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <h2>FinTrack</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li class="active" id="navDashboard"><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li id="navAnalytics"><a href="#"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                        <li id="navSettings"><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </nav>
+                <div class="user-profile">
+                    <div class="avatar">
+                        <img src="user_avatar.png" alt="User"
+                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    <div class="user-info">
+                        <p>Welcome Back</p>
+                        <h4 id="displayUserName">User</h4>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header class="top-bar">
+                    <div class="top-bar-left">
+                        <button class="hamburger-menu" id="hamburgerMenu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h1 id="pageTitle">Dashboard</h1>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                            <i class="fas fa-sun"></i>
+                        </button>
+                        <div class="date-display" id="currentDate"></div>
+                    </div>
+                </header>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card total-balance">
+                        <div class="icon-box"><i class="fas fa-rupee-sign"></i></div>
+                        <div class="stat-info">
+                            <p>Total Expenses</p>
+                            <h3 id="totalAmount">₹0.00</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card transaction-count">
+                        <div class="icon-box"><i class="fas fa-receipt"></i></div>
+                        <div class="stat-info">
+                            <p>Transactions</p>
+                            <h3 id="transactionCount">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card top-category">
+                        <div class="icon-box"><i class="fas fa-crown"></i></div>
+                        <div class="stat-info">
+                            <p>Top Category</p>
+                            <h3 id="topCategory">N/A</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <!-- Add Expense Form -->
+                    <section class="card add-expense-card" id="addExpenseSection">
+                        <div class="card-header">
+                            <h3><i class="fas fa-plus-circle"></i> Add Transaction</h3>
+                        </div>
+                        <form id="expenseForm">
+                            <div class="form-group">
+                                <label>Expense Name</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-tag"></i>
+                                    <input type="text" id="expenseName" placeholder="e.g. Netflix Subscription"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Amount (₹)</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-rupee-sign"></i>
+                                        <input type="number" id="expenseAmount" placeholder="0.00" min="0" step="0.01"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-list"></i>
+                                        <select id="expenseCategory" required>
+                                            <option value="" disabled selected>Select</option>
+                                            <option value="Food">Food</option>
+                                            <option value="Transport">Transport</option>
+                                            <option value="Utilities">Utilities</option>
+                                            <option value="Entertainment">Entertainment</option>
+                                            <option value="Shopping">Shopping</option>
+                                            <option value="Health">Health</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar"></i>
+                                    <input type="date" id="expenseDate" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary">Add Expense <i
+                                    class="fas fa-arrow-right"></i></button>
+                        </form>
+                    </section>
+
+                    <!-- Chart Section -->
+                    <section class="card chart-card" id="analyticsSection">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-bar"></i> Expense Breakdown</h3>
+                            <div class="chart-tabs">
+                                <button class="chart-tab active" data-chart="bar">
+                                    <i class="fas fa-chart-bar"></i>
+                                </button>
+                                <button class="chart-tab" data-chart="pie">
+                                    <i class="fas fa-chart-pie"></i>
+                                </button>
+                                <button class="chart-tab" data-chart="line">
+                                    <i class="fas fa-chart-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Recent Transactions -->
+                <section class="card recent-transactions" id="transactionsSection">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                        <button id="toggleFilters" class="btn-filter">
+                            <i class="fas fa-filter"></i> Filters
+                        </button>
+                    </div>
+
+                    <!-- Advanced Filters Panel -->
+                    <div class="filters-panel hidden" id="filtersPanel">
+                        <div class="filters-grid">
+                            <div class="filter-group">
+                                <label><i class="fas fa-search"></i> Search</label>
+                                <input type="text" id="searchInput" placeholder="Search by name...">
+                            </div>
+                            <div class="filter-group">
+                                <label><i class="fas fa-calendar"></i> Date From</label>
+                                <input type="date" id="filterDateFrom">
+                            </div>
+                            <div class="filter-group">
+                                <label><i class="fas fa-calendar"></i> Date To</label>
+                                <input type="date" id="filterDateTo">
+                            </div>
+                            <div class="filter-group">
+                                <label><i class="fas fa-list"></i> Category</label>
+                                <select id="filterCategory">
+                                    <option value="">All Categories</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Utilities">Utilities</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Health">Health</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label><i class="fas fa-rupee-sign"></i> Min Amount</label>
+                                <input type="number" id="filterMinAmount" placeholder="0" min="0" step="0.01">
+                            </div>
+                            <div class="filter-group">
+                                <label><i class="fas fa-rupee-sign"></i> Max Amount</label>
+                                <input type="number" id="filterMaxAmount" placeholder="Any" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button id="applyFilters" class="btn-primary-small">
+                                <i class="fas fa-check"></i> Apply Filters
+                            </button>
+                            <button id="clearAllFilters" class="btn-secondary-small">
+                                <i class="fas fa-times"></i> Clear All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="expenseTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Details</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenseList">
+                                <!-- Injected via JS -->
+                            </tbody>
+                        </table>
+                        <div id="noExpensesMsg" class="empty-state hidden">
+                            <img src="finance_illustration.png" alt="No Data" class="empty-img">
+                            <p>No expenses found for this date.</p>
+                        </div>
+                        <div id="emptyState" class="empty-state hidden">
+                            <svg class="empty-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--primary)" stroke-width="2"
+                                    opacity="0.2">
+                                    <animate attributeName="r" from="60" to="85" dur="2s" repeatCount="indefinite" />
+                                    <animate attributeName="opacity" from="0.3" to="0.1" dur="2s"
+                                        repeatCount="indefinite" />
+                                </circle>
+                                <circle cx="100" cy="100" r="60" fill="none" stroke="var(--secondary)" stroke-width="2"
+                                    opacity="0.3">
+                                    <animate attributeName="r" from="40" to="65" dur="2s" repeatCount="indefinite" />
+                                    <animate attributeName="opacity" from="0.4" to="0.1" dur="2s"
+                                        repeatCount="indefinite" />
+                                </circle>
+                                <path d="M85 95 L95 105 L115 85" fill="none" stroke="var(--primary)" stroke-width="4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <text x="100" y="140" text-anchor="middle" fill="var(--text-muted)"
+                                    font-size="14">₹</text>
+                            </svg>
+                            <h3>No Expenses Yet</h3>
+                            <p>Start tracking your finances by adding your first expense!</p>
+                            <button class="btn-primary" id="quickAddExpense"
+                                style="max-width: 250px; margin: 1rem auto 0;">
+                                <i class="fas fa-plus-circle"></i> Add Your First Expense
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Analytics Modal -->
+    <div id="analyticsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-chart-bar"></i> Expense Analytics</h2>
+                <div class="modal-chart-tabs">
+                    <button class="modal-chart-tab active" data-chart="comparison">
+                        <i class="fas fa-exchange-alt"></i> Comparison
+                    </button>
+                    <button class="modal-chart-tab" data-chart="trend">
+                        <i class="fas fa-chart-line"></i> Trends
+                    </button>
+                    <button class="modal-chart-tab" data-chart="distribution">
+                        <i class="fas fa-chart-pie"></i> Distribution
+                    </button>
+                </div>
+                <button id="closeAnalyticsBtn" class="btn-icon" style="font-size: 1.5rem;"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="chart-container-large">
+                    <canvas id="modalExpenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-content settings-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-cog"></i> Settings</h2>
+                <button id="closeSettingsBtn" class="btn-icon" style="font-size: 1.5rem;"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-tab="profile"><i class="fas fa-user"></i> Profile</button>
+                    <button class="settings-tab" data-tab="preferences"><i class="fas fa-sliders-h"></i>
+                        Preferences</button>
+                    <button class="settings-tab" data-tab="budget"><i class="fas fa-wallet"></i> Budget</button>
+                    <button class="settings-tab" data-tab="appearance"><i class="fas fa-palette"></i>
+                        Appearance</button>
+                </div>
+
+                <!-- Profile Tab -->
+                <div class="settings-content active" id="profileTab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-info-circle"></i> Account Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Username:</label>
+                                <p id="settingsUsername">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Total Expenses:</label>
+                                <p id="settingsTotalExpenses">₹0</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Total Transactions:</label>
+                                <p id="settingsTotalTransactions">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-key"></i> Change Password</h3>
+                        <form id="changePasswordForm" class="settings-form">
+                            <div class="form-group">
+                                <label>Current Password:</label>
+                                <input type="password" id="currentPassword" placeholder="Enter current password"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password:</label>
+                                <input type="password" id="newPassword" placeholder="Enter new password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password:</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                            </div>
+                            <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Change
+                                Password</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-database"></i> Data Management</h3>
+                        <div class="button-group">
+                            <button id="exportDataBtn" class="btn-success"><i class="fas fa-download"></i> Export All
+                                Data (CSV)</button>
+                            <button id="clearDataBtn" class="btn-danger"><i class="fas fa-trash-alt"></i> Clear All
+                                Expenses</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div class="settings-content" id="preferencesTab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-money-bill"></i> Currency Settings</h3>
+                        <div class="form-group">
+                            <label>Preferred Currency:</label>
+                            <select id="currencySelect" class="settings-select">
+                                <option value="INR">₹ Indian Rupee (INR)</option>
+                                <option value="USD">$ US Dollar (USD)</option>
+                                <option value="EUR">€ Euro (EUR)</option>
+                                <option value="GBP">£ British Pound (GBP)</option>
+                                <option value="JPY">¥ Japanese Yen (JPY)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-calendar"></i> Date Format</h3>
+                        <div class="form-group">
+                            <label>Date Display Format:</label>
+                            <select id="dateFormatSelect" class="settings-select">
+                                <option value="DD/MM/YYYY">DD/MM/YYYY (07/12/2024)</option>
+                                <option value="MM/DD/YYYY">MM/DD/YYYY (12/07/2024)</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD (2024-12-07)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-sort"></i> Default Settings</h3>
+                        <div class="form-group">
+                            <label>Default Expense Category:</label>
+                            <select id="defaultCategorySelect" class="settings-select">
+                                <option value="">None (Select each time)</option>
+                                <option value="Food">Food</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Health">Health</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction Sort Order:</label>
+                            <select id="sortOrderSelect" class="settings-select">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="highest">Highest Amount First</option>
+                                <option value="lowest">Lowest Amount First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="savePreferencesBtn" class="btn-primary"><i class="fas fa-save"></i> Save
+                        Preferences</button>
+                </div>
+
+                <!-- Budget Tab -->
+                <div class="settings-content" id="budgetTab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-chart-line"></i> Monthly Budget</h3>
+                        <div class="form-group">
+                            <label>Set Monthly Spending Limit:</label>
+                            <input type="number" id="monthlyBudgetInput" placeholder="e.g., 10000" min="0" step="100">
+                            <small>Leave empty to disable budget tracking</small>
+                        </div>
+                        <div class="budget-display" id="budgetDisplay">
+                            <div class="budget-info">
+                                <p>Current Month Spending: <span id="currentMonthSpending">₹0</span></p>
+                                <p>Budget Limit: <span id="budgetLimit">Not Set</span></p>
+                                <p>Remaining: <span id="budgetRemaining">-</span></p>
+                            </div>
+                            <div class="budget-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="budgetProgressFill"></div>
+                                </div>
+                                <p class="progress-text" id="budgetProgressText">0%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-bell"></i> Budget Alerts</h3>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="alert80" checked>
+                                <span>Alert at 80% of budget</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="alert90" checked>
+                                <span>Alert at 90% of budget</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="alert100" checked>
+                                <span>Alert when budget exceeded</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="saveBudgetBtn" class="btn-primary"><i class="fas fa-save"></i> Save Budget
+                        Settings</button>
+                </div>
+
+                <!-- Appearance Tab -->
+                <div class="settings-content" id="appearanceTab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-moon"></i> Theme</h3>
+                        <div class="theme-selector">
+                            <button class="theme-option active" data-theme="dark">
+                                <i class="fas fa-moon"></i>
+                                <span>Dark Mode</span>
+                            </button>
+                            <button class="theme-option" data-theme="light">
+                                <i class="fas fa-sun"></i>
+                                <span>Light Mode</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-palette"></i> Accent Color</h3>
+                        <div class="color-selector">
+                            <button class="color-option active" data-color="indigo"
+                                style="background: #6366f1;"></button>
+                            <button class="color-option" data-color="purple" style="background: #a855f7;"></button>
+                            <button class="color-option" data-color="blue" style="background: #3b82f6;"></button>
+                            <button class="color-option" data-color="green" style="background: #10b981;"></button>
+                            <button class="color-option" data-color="red" style="background: #ef4444;"></button>
+                            <button class="color-option" data-color="orange" style="background: #f97316;"></button>
+                        </div>
+                    </div>
+
+                    <button id="saveAppearanceBtn" class="btn-primary"><i class="fas fa-save"></i> Save
+                        Appearance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="script-enhanced.js"></script>
+</body>
+
+</html>
